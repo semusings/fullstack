@@ -1,0 +1,72 @@
+x-default-logging: &logging
+  driver: "json-file"
+  options:
+    max-size: "5m"
+    max-file: "2"
+    tag: "{{.Name}}"
+
+networks:
+  default:
+    name: semusings-net
+    driver: bridge
+
+services:
+  postgres:
+    image: ${POSTGRES_IMAGE}
+    container_name: postgres
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    ports:
+      - "${POSTGRES_PORT_TCP}"
+    environment:
+      - $POSTGRES_USER
+      - $POSTGRES_PASSWORD
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    logging: *logging
+
+  openfgamigrate:
+    image: ${OPENFGA_IMAGE}
+    container_name: openfgamigrate
+    command:
+      - "migrate"
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    environment:
+      - OPENFGA_DATASTORE_ENGINE
+      - OPENFGA_DATASTORE_URI      
+    logging: *logging
+    depends_on:
+      postgres:
+        condition: service_started
+
+  openfga:
+    image: ${OPENFGA_IMAGE}
+    container_name: openfga
+    command:
+      - "run"
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    restart: unless-stopped
+    ports:
+      - "${OPENFGA_PORT_HTTP}" # Needed for the http server
+      - "${OPENFGA_PORT_GRPC}" # Needed for the grpc server (if used)
+      - "${OPENFGA_PORT_PLAYGROUND}" # Needed for the playground (Do not enable in prod!)
+    environment:
+      - OPENFGA_HTTP_ADDR
+      - OPENFGA_DATASTORE_ENGINE
+      - OPENFGA_DATASTORE_URI
+      - OPENFGA_LOG_FORMAT
+    logging: *logging
+    depends_on:
+      postgres:
+        condition: service_started
