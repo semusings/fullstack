@@ -21,8 +21,8 @@ services:
     ports:
       - "${POSTGRES_PORT_TCP}"
     environment:
-      - $POSTGRES_USER
-      - $POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER" ]
       interval: 5s
@@ -41,7 +41,7 @@ services:
           memory: 300M
     environment:
       - OPENFGA_DATASTORE_ENGINE
-      - OPENFGA_DATASTORE_URI      
+      - OPENFGA_DATASTORE_URI
     logging: *logging
     depends_on:
       postgres:
@@ -60,7 +60,7 @@ services:
     ports:
       - "${OPENFGA_PORT_HTTP}" # Needed for the http server
       - "${OPENFGA_PORT_GRPC}" # Needed for the grpc server (if used)
-      - "${OPENFGA_PORT_PLAYGROUND}" # Needed for the playground (Do not enable in prod!)
+      - "${OPENFGA_PORT_PLAYGROUND}:${OPENFGA_PORT_PLAYGROUND}" # Needed for the playground (Do not enable in prod!)
     environment:
       - OPENFGA_HTTP_ADDR
       - OPENFGA_DATASTORE_ENGINE
