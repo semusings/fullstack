@@ -3,6 +3,7 @@ package dev.bhuwanupadhyay.demo.order.application.commands;
 import dev.bhuwanupadhyay.demo.order.model.Order;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/orders")
@@ -16,7 +17,7 @@ public interface OrderCommand {
 
   @PostMapping("/{orderId}/items/{lineItemId}")
   OrderResponse updateItem(@PathVariable String orderId, @PathVariable String lineItemId,
-      ItemRequest request);
+      @RequestBody ItemRequest request);
 
   @PostMapping("/{orderId}/complete")
   OrderResponse completeOrder(@PathVariable String orderId);
