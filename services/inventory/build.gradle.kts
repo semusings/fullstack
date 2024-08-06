@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     implementation("dev.openfga:openfga-spring-boot-starter:0.0.1")
-    implementation("net.ttddyy:datasource-proxy:1.10")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

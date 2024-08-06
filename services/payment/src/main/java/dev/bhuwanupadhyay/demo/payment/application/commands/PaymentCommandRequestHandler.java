@@ -19,7 +19,8 @@ class PaymentCommandRequestHandler implements PaymentCommand {
   @Override
   public PaymentResponse createPayment(String orderId, PaymentRequest request) {
     String customerId = SecurityContextHolder.getContext().getAuthentication().getName();
-    Payment payment = paymentProcessor.create(OrderId.of(orderId), CustomerId.of(customerId), request.txnAmount());
+    Payment payment = paymentProcessor.create(OrderId.of(orderId), CustomerId.of(customerId),
+        request.txnAmount());
     return PaymentResponse.of(payment);
   }
 

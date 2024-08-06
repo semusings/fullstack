@@ -19,18 +19,20 @@ class PaymentQueryRequestHandler implements PaymentQuery {
 
   @Override
   public QueryListResponse getPayments(String filters, Pageable pageable) {
-    Page<Payment> page = orders.findAll(
-        PaymentJpaRepository.filters(PaymentQuery.customerId(), filters), pageable);
-    List<Map<String, Object>> records = page.stream().map(PaymentQuery::toPaymentResponse)
-        .collect(Collectors.toList());
+    Page<Payment> page =
+        orders.findAll(
+            PaymentJpaRepository.filters(PaymentQuery.customerId(), filters), pageable);
+    List<Map<String, Object>> records =
+        page.stream().map(PaymentQuery::toPaymentResponse).collect(Collectors.toList());
     return new QueryListResponse(records, page.getTotalElements());
   }
 
-
   @Override
   public QueryResponse getPayment(String orderId) {
-    Payment payment = orders.getByCustomerIdAndOrderId(PaymentQuery.customerId(),
-        Payment.OrderId.of(orderId)).orElseThrow(() -> new IllegalArgumentException("Not Found"));
+    Payment payment =
+        orders.getByCustomerIdAndOrderId(
+                PaymentQuery.customerId(), Payment.OrderId.of(orderId))
+            .orElseThrow(() -> new IllegalArgumentException("Not Found"));
     return new QueryResponse(PaymentQuery.toPaymentResponse(payment));
   }
 }

@@ -1,3 +1,5 @@
+server:
+  port: 9092
 spring:
   jpa:
     hibernate:
@@ -11,3 +13,20 @@ openfga:
   api-url: http://localhost:4000
   store-id: order
   authorization-model-id: order
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    doc-expansion: none
+    operations-sorter: alpha
+    tags-sorter: alpha
+    layout: BaseLayout
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
